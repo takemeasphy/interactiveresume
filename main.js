@@ -33,17 +33,17 @@ function createStars(containerId, count, maxTopPercent) {
 createStars('stars-layer-1', 70, 42);
 createStars('stars-layer-2', 40, 55);
 
-const trailLength = 18;
-const DOT_SIZE = 16;
+const trailLength = 10;
+const DOT_SIZE = 14;
 const dots = [];
-const positionsCursor = [];
+const positions = [];
 
 for (let i = 0; i < trailLength; i++) {
   const dot = document.createElement('div');
   dot.className = 'cursor-dot';
   document.body.appendChild(dot);
   dots.push(dot);
-  positionsCursor.push({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+  positions.push({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
 }
 
 let mouseX = window.innerWidth / 2;
@@ -58,31 +58,32 @@ window.addEventListener('mousemove', (e) => {
 
 window.addEventListener('mouseleave', () => {
   mouseActive = false;
-  dots.forEach(dot => dot.style.opacity = '0');
+  dots.forEach(dot => (dot.style.opacity = '0'));
 });
 
 function animateTrail() {
-  positionsCursor[0].x = mouseX;
-  positionsCursor[0].y = mouseY;
+  positions[0].x = mouseX;
+  positions[0].y = mouseY;
 
   for (let i = 1; i < trailLength; i++) {
-    const prev = positionsCursor[i - 1];
-    const curr = positionsCursor[i];
-    const lerpFactor = 0.2;
+    const prev = positions[i - 1];
+    const curr = positions[i];
+
+    const lerpFactor = 0.35;
     curr.x += (prev.x - curr.x) * lerpFactor;
     curr.y += (prev.y - curr.y) * lerpFactor;
   }
 
   for (let i = 0; i < trailLength; i++) {
     const dot = dots[i];
-    const pos = positionsCursor[i];
+    const pos = positions[i];
 
-    const scale = 1 - i * 0.035;
-    const opacity = mouseActive ? (1 - i * 0.055) : 0;
+    const scale = Math.max(0, 1 - i * 0.07);
+    const opacity = mouseActive ? Math.max(0, 1 - i * 0.12) : 0;
     const half = DOT_SIZE / 2;
 
-    dot.style.left = (pos.x - half) + 'px';
-    dot.style.top = (pos.y - half) + 'px';
+    dot.style.left = pos.x - half + 'px';
+    dot.style.top = pos.y - half + 'px';
     dot.style.transform = `scale(${scale})`;
     dot.style.opacity = opacity.toFixed(2);
   }
@@ -122,7 +123,7 @@ function openInfoForPlanet(planet) {
   infoPanel.style.left = left + 'px';
   infoPanel.style.top = top + 'px';
 
-  planets.forEach(p => p.classList.remove('planet--info-open'));
+  planets.forEach((p) => p.classList.remove('planet--info-open'));
   planet.classList.add('planet--info-open');
 
   infoPanel.classList.add('info-panel--visible');
@@ -130,10 +131,10 @@ function openInfoForPlanet(planet) {
 
 function closeInfoPanel() {
   infoPanel.classList.remove('info-panel--visible');
-  planets.forEach(p => p.classList.remove('planet--info-open'));
+  planets.forEach((p) => p.classList.remove('planet--info-open'));
 }
 
-planets.forEach(planet => {
+planets.forEach((planet) => {
   planet.addEventListener('click', (e) => {
     e.stopPropagation();
     openInfoForPlanet(planet);
@@ -153,7 +154,7 @@ sky.addEventListener('click', (e) => {
 
 window.addEventListener('resize', () => {
   if (!infoPanel.classList.contains('info-panel--visible')) return;
-  const openPlanet = planets.find(p => p.classList.contains('planet--info-open'));
+  const openPlanet = planets.find((p) => p.classList.contains('planet--info-open'));
   if (openPlanet) {
     openInfoForPlanet(openPlanet);
   }
