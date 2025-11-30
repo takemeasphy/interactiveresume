@@ -5,117 +5,251 @@
   <title>Artem Nazarchuk — Night Resume</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="styles.css" />
-  <script src="main.js" defer></script>
 </head>
-
-<body>
+<body class="lang-uk">
   <div class="scene">
+    <div class="lang-switch" aria-label="Language switch">
+      <button class="lang-btn lang-btn--active" data-lang="uk">UA</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+
     <div class="sky" aria-label="Зоряне небо з планетами">
       <div class="stars layer-1" id="stars-layer-1"></div>
       <div class="stars layer-2" id="stars-layer-2"></div>
 
-      <div class="planet planet-main" data-title="Досвід та навички">
+      <div
+        class="planet planet-main"
+        data-title-uk="Досвід та навички"
+        data-title-en="Experience & skills"
+      >
         <div class="planet-inner">
           <img src="assets/planetmain.png" alt="Main planet" />
         </div>
-        <div class="planet-tooltip">Досвід та навички</div>
-        <div class="planet-info-content">
-          <p><strong>C / C++:</strong> алгоритми, структури даних, консольні утиліти, навчальні проєкти, робота з
-            пам’яттю та базовою оптимізацією.</p>
 
-          <p><strong>JavaScript:</strong> інтерактивні інтерфейси, робота з DOM, анімації, невеликі pet-проєкти та
-            прототипи.</p>
+        <div class="planet-tooltip">
+          <span data-lang="uk">Досвід та навички</span>
+          <span data-lang="en">Experience &amp; skills</span>
+        </div>
 
-          <p><strong>TypeScript &amp; React / React Native:</strong> SPA, керування станом, кастомні хуки, мобільні
-            інтерфейси (Expo), базова робота з формами та валідацією.</p>
+        <div class="planet-info-content" data-lang="uk">
+          <p><strong>C / C++:</strong> алгоритми, структури даних, консольні утиліти,
+            навчальні проєкти, робота з пам’яттю та базовою оптимізацією.</p>
 
-          <p><strong>Node.js + Express:</strong> REST-API, авторизація по токену, інтеграція з PostgreSQL, побудова
-            простої серверної архітектури.</p>
+          <p><strong>JavaScript:</strong> інтерактивні інтерфейси, робота з DOM, анімації,
+            невеликі pet-проєкти та прототипи.</p>
 
-          <p><strong>SQL (PostgreSQL, SQLite):</strong> складені запити, JOIN, агрегації, проєктування таблиць під
-            реальні задачі.</p>
+          <p><strong>TypeScript &amp; React / React Native:</strong> SPA, керування станом,
+            кастомні хуки, мобільні інтерфейси (Expo), базова робота з формами та валідацією.</p>
 
-          <p><strong>Python, C#:</strong> скрипти, прототипи, розв’язання алгоритмічних та навчальних задач.</p>
+          <p><strong>Node.js + Express:</strong> REST-API, авторизація по токену,
+            інтеграція з PostgreSQL, побудова простої серверної архітектури.</p>
 
-          <p><strong>Університетські проєкти:</strong> лабораторні та курсові роботи з Python, C++ та C#: обробка файлів
-            і дат, регулярні вирази, аналіз даних у pandas з власними датасетами та SQL-БД, побудова простих аналітичних
-            дашбордів у Streamlit; у C++ – застосування структур даних, ООП, базового мультипотокового виконання через
-            <code>&lt;future&gt;</code> та розробка невеликих ігрових сценаріїв на основі сопрограм.</p>
+          <p><strong>SQL (PostgreSQL, SQLite):</strong> складені запити, JOIN, агрегації,
+            проєктування таблиць під реальні задачі.</p>
 
-          <p><strong>Git / GitHub:</strong> робота з гілками, pull-request-флоу, code review, командна розробка.</p>
+          <p><strong>Python, C#:</strong> скрипти, прототипи, розв’язання алгоритмічних та
+            навчальних задач.</p>
 
-          <p><strong>Досвід:</strong> студент факультету електроніки НТУУ «КПІ»: лабораторні та проєктні роботи з
-            мікроконтролерів, цифрової та аналогової електроніки, побудова простих вбудованих систем (сенсорні модулі,
-            керування освітленням, вимірювальні стенди). Самозайнятий розробник: створення й підтримка власних
-            pet-проєктів — мобільний застосунок для трекінгу фінансів (React Native + Node.js + PostgreSQL), десктопна
-            утиліта для сканування бібліотеки Steam (Tauri + React), 2D-гра з анімацією, UI та системою прогресу, а
-            також застосунок на кшталт Opal для обмеження екранного часу на мобільному (React Native + нативні
-            iOS/Android-можливості).</p>
+          <p><strong>Університетські проєкти:</strong> лабораторні та курсові роботи з
+            Python, C++ та C#: обробка файлів і дат, регулярні вирази, аналіз даних у
+            pandas з власними датасетами та SQL-БД, побудова простих аналітичних дашбордів
+            у Streamlit; у C++ – застосування структур даних, ООП, базового
+            мультипотокового виконання через <code>&lt;future&gt;</code> та розробка
+            невеликих ігрових сценаріїв на основі сопрограм.</p>
+
+          <p><strong>Git / GitHub:</strong> робота з гілками, pull-request-флоу, code review,
+            командна розробка.</p>
+
+          <p><strong>Досвід:</strong> студент факультету електроніки НТУУ «КПІ»:
+            лабораторні та проєктні роботи з мікроконтролерів, цифрової та аналогової
+            електроніки, побудова простих вбудованих систем (сенсорні модулі, керування
+            освітленням, вимірювальні стенди). Самозайнятий розробник: створення й
+            підтримка власних pet-проєктів — мобільний застосунок для трекінгу фінансів
+            (React Native + Node.js + PostgreSQL), десктопна утиліта для сканування
+            бібліотеки Steam (Tauri + React), 2D-гра з анімацією, UI та системою прогресу,
+            а також застосунок на кшталт Opal для обмеження екранного часу на мобільному
+            (React Native + нативні iOS/Android-можливості).</p>
+        </div>
+
+        <div class="planet-info-content" data-lang="en">
+          <p><strong>C / C++:</strong> algorithms, data structures, console utilities,
+            university projects, memory handling and basic optimisation.</p>
+
+          <p><strong>JavaScript:</strong> interactive interfaces, DOM work, animations,
+            small pet projects and prototypes.</p>
+
+          <p><strong>TypeScript &amp; React / React Native:</strong> single-page
+            applications, state management, custom hooks, mobile UIs with Expo, basic
+            form handling and validation.</p>
+
+          <p><strong>Node.js + Express:</strong> REST APIs, token-based auth, integration
+            with PostgreSQL, simple server-side architecture.</p>
+
+          <p><strong>SQL (PostgreSQL, SQLite):</strong> complex queries, JOINs,
+            aggregations, table design for real-world tasks.</p>
+
+          <p><strong>Python, C#:</strong> scripts, prototypes, algorithmic and
+            course-related tasks.</p>
+
+          <p><strong>University projects:</strong> numerous lab and course projects in
+            Python, C++ and C#: file &amp; date processing, regular expressions, data
+            analysis in pandas using custom datasets and SQL databases, simple analytic
+            dashboards in Streamlit; in C++ — data structures, OOP, basic multithreading
+            with <code>&lt;future&gt;</code> and small game-like scenarios with
+            coroutines.</p>
+
+          <p><strong>Git / GitHub:</strong> branching, pull-request flow, code review,
+            collaborative development.</p>
+
+          <p><strong>Experience:</strong> electronics student at KPI: lab and project work
+            with microcontrollers, digital and analogue electronics, building simple
+            embedded systems (sensor modules, lighting control, measurement setups).
+            Self-directed developer: creation and maintenance of pet projects — a mobile
+            finance tracker (React Native + Node.js + PostgreSQL), a desktop Steam library
+            scanner (Tauri + React), a 2D game with animation, UI and progress system, and
+            an Opal-like mobile screen-time limiter (React Native + native iOS/Android
+            capabilities).</p>
         </div>
       </div>
 
-      <div class="planet planet-blue" data-title="Освіта">
+      <div
+        class="planet planet-blue"
+        data-title-uk="Освіта"
+        data-title-en="Education"
+      >
         <div class="planet-inner">
           <img src="assets/planetblue.png" alt="Blue planet" />
         </div>
-        <div class="planet-tooltip">Освіта</div>
-        <div class="planet-info-content">
-          <p><strong>Повна загальна середня освіта:</strong> Ліцей № 214 Оболонського району м. Києва (математичний
-            профіль), закінчив у 2024 році із золотою медаллю.</p>
 
-          <p><strong>Студент 2-го курсу Національного технічного університету України «КПІ ім. Ігоря Сікорського»,
-              факультет електроніки, освітня програма «Акустичні та мультимедійні системи».</strong></p>
+        <div class="planet-tooltip">
+          <span data-lang="uk">Освіта</span>
+          <span data-lang="en">Education</span>
+        </div>
 
-          <p>Університетське навчання поєднує електроніку, цифрову обробку сигналів, акустику та мультимедійні
-            технології: від базової схемотехніки й мікроконтролерів до програмування вбудованих систем та роботи з
-            мультимедійними даними.</p>
+        <div class="planet-info-content" data-lang="uk">
+          <p><strong>Повна загальна середня освіта:</strong> Ліцей № 214 Оболонського
+            району м. Києва (математичний профіль), закінчив у 2024 році із золотою
+            медаллю.</p>
 
-          <p><strong>Мови:</strong> англійська - C1 (Advanced), німецька - B2 (Upper-Intermediate).</p>
+          <p><strong>Студент 2-го курсу Національного технічного університету України
+              «КПІ ім. Ігоря Сікорського», факультет електроніки, освітня програма
+              «Акустичні та мультимедійні системи».</strong></p>
+
+          <p>Університетське навчання поєднує електроніку, цифрову обробку сигналів,
+            акустику та мультимедійні технології: від базової схемотехніки й
+            мікроконтролерів до програмування вбудованих систем та роботи з мультимедійними
+            даними.</p>
+
+          <p><strong>Мови:</strong> англійська — C1 (Advanced), німецька — B2
+            (Upper-Intermediate).</p>
+        </div>
+
+        <div class="planet-info-content" data-lang="en">
+          <p><strong>Secondary education:</strong> Lyceum No. 214, Obolonskyi District,
+            Kyiv (mathematics track), graduated in 2024 with a gold medal.</p>
+
+          <p><strong>2nd-year student at the National Technical University of Ukraine
+              “Igor Sikorsky KPI”, Faculty of Electronics, degree programme
+              “Acoustic and Multimedia Systems”.</strong></p>
+
+          <p>My university studies combine electronics, digital signal processing,
+            acoustics and multimedia technologies: from basic circuit design and
+            microcontrollers to programming embedded systems and working with multimedia
+            data.</p>
+
+          <p><strong>Languages:</strong> English — C1 (Advanced), German — B2
+            (Upper-Intermediate).</p>
         </div>
       </div>
 
-      <div class="planet planet-pink" data-title="Корисні посилання та контакти">
+      <div
+        class="planet planet-pink"
+        data-title-uk="Посилання та контакти"
+        data-title-en="Links & contacts"
+      >
         <div class="planet-inner">
           <img src="assets/planet2.png" alt="Pink planet" />
         </div>
-        <div class="planet-tooltip">Посилання та контакти</div>
-        <div class="planet-info-content">
+
+        <div class="planet-tooltip">
+          <span data-lang="uk">Посилання та контакти</span>
+          <span data-lang="en">Links &amp; contacts</span>
+        </div>
+
+        <div class="planet-info-content" data-lang="uk">
           <p><strong>GitHub:</strong> <a href="https://github.com/takemeasphy" target="_blank"
               rel="noreferrer">github.com/takemeasphy</a></p>
-          <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/artem-nazarchuk-773a80362/" target="_blank"
-              rel="noreferrer">linkedin.com/in/artem-nazarchuk-773a80362</a></p>
-          <p><strong>E-mail:</strong> <a href="mailto:nazarchuk.artem2007@gmail.com">nazarchuk.artem2007@gmail.com</a>
-          </p>
-          <p><strong>Телефон:</strong> +380&nbsp;63&nbsp;369&nbsp;44&nbsp;13 <span
-              style="white-space:nowrap;">(Telegram, WhatsApp)</span></p>
+          <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/artem-nazarchuk-773a80362/"
+              target="_blank" rel="noreferrer">linkedin.com/in/artem-nazarchuk-773a80362</a></p>
+          <p><strong>E-mail:</strong> <a href="mailto:nazarchuk.artem2007@gmail.com">
+              nazarchuk.artem2007@gmail.com</a></p>
+          <p><strong>Телефон:</strong> +380&nbsp;63&nbsp;369&nbsp;44&nbsp;13
+            <span style="white-space:nowrap;">(Telegram, WhatsApp)</span></p>
+        </div>
+
+        <div class="planet-info-content" data-lang="en">
+          <p><strong>GitHub:</strong> <a href="https://github.com/takemeasphy" target="_blank"
+              rel="noreferrer">github.com/takemeasphy</a></p>
+          <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/artem-nazarchuk-773a80362/"
+              target="_blank" rel="noreferrer">linkedin.com/in/artem-nazarchuk-773a80362</a></p>
+          <p><strong>E-mail:</strong> <a href="mailto:nazarchuk.artem2007@gmail.com">
+              nazarchuk.artem2007@gmail.com</a></p>
+          <p><strong>Phone:</strong> +380&nbsp;63&nbsp;369&nbsp;44&nbsp;13
+            <span style="white-space:nowrap;">(Telegram, WhatsApp)</span></p>
         </div>
       </div>
 
-      <div class="planet planet-purple" data-title="Досягнення">
+      <div
+        class="planet planet-purple"
+        data-title-uk="Досягнення"
+        data-title-en="Achievements"
+      >
         <div class="planet-inner">
           <img src="assets/pplanet1.png" alt="Moon-like planet" />
         </div>
-        <div class="planet-tooltip">Досягнення</div>
-        <div class="planet-info-content">
-          <p><strong>Наукова публікація:</strong> участь у Х Всеукраїнській студентській науково-практичній конференції
-            «Significant achievements in science and technology» з публікацією роботи в офіційному збірнику
+
+        <div class="planet-tooltip">
+          <span data-lang="uk">Досягнення</span>
+          <span data-lang="en">Achievements</span>
+        </div>
+
+        <div class="planet-info-content" data-lang="uk">
+          <p><strong>Наукова публікація:</strong> участь у Х Всеукраїнській студентській
+            науково-практичній конференції «Significant achievements in science and
+            technology» з публікацією роботи в офіційному збірнику
             (<a
               href="https://kamts1.kpi.ua/2024/09/23/kh-vseukrainska-studentska-naukovo-praktychna-konferentsia-significant-achievements-in-science-and-technology-vyznachni-dosiahnennia-u-nautsi-ta-tekhnitsi/"
               target="_blank" rel="noreferrer">сторінка конференції</a>,
-            <a href="https://kamts1.kpi.ua/wp-content/uploads/2024/12/zbirnyk_10-i_studentskoi-konferentsii-2024.pdf"
-              target="_blank" rel="noreferrer">збірник робіт (PDF)</a>).
-          </p>
+            <a
+              href="https://kamts1.kpi.ua/wp-content/uploads/2024/12/zbirnyk_10-i_studentskoi-konferentsii-2024.pdf"
+              target="_blank" rel="noreferrer">збірник робіт (PDF)</a>).</p>
 
-          <p><strong>Математична олімпіада:</strong> 4-те місце у Першому турі Відкритої студентської математичної
-            олімпіади НТУУ «КПІ» (2024/2025, категорія T).
-            <a href="https://matan.kpi.ua/uk/olimpiada/2025-facult/cat-t/" target="_blank" rel="noreferrer">Сторінка
-              олімпіади</a>.
-          </p>
+          <p><strong>Математична олімпіада:</strong> 4-те місце у Першому турі Відкритої
+            студентської математичної олімпіади НТУУ «КПІ» (2024/2025, категорія T).
+            <a href="https://matan.kpi.ua/uk/olimpiada/2025-facult/cat-t/" target="_blank"
+              rel="noreferrer">Сторінка олімпіади</a>.</p>
+        </div>
+
+        <div class="planet-info-content" data-lang="en">
+          <p><strong>Scientific publication:</strong> participation in the 10th All-Ukrainian
+            student scientific-practical conference “Significant achievements in science
+            and technology” with a paper published in the official proceedings
+            (<a
+              href="https://kamts1.kpi.ua/2024/09/23/kh-vseukrainska-studentska-naukovo-praktychna-konferentsia-significant-achievements-in-science-and-technology-vyznachni-dosiahnennia-u-nautsi-ta-tekhnitsi/"
+              target="_blank" rel="noreferrer">conference page</a>,
+            <a
+              href="https://kamts1.kpi.ua/wp-content/uploads/2024/12/zbirnyk_10-i_studentskoi-konferentsii-2024.pdf"
+              target="_blank" rel="noreferrer">proceedings (PDF)</a>).</p>
+
+          <p><strong>Math olympiad:</strong> 4th place in the First round of the Open
+            Student Mathematics Olympiad of KPI (2024/2025, category T).
+            <a href="https://matan.kpi.ua/uk/olimpiada/2025-facult/cat-t/" target="_blank"
+              rel="noreferrer">Olympiad page</a>.</p>
         </div>
       </div>
 
       <div class="info-panel" id="info-panel">
-        <button class="info-panel-close" id="info-close" aria-label="Закрити">✕</button>
+        <button class="info-panel-close" id="info-close" aria-label="Закрити / Close">✕</button>
         <div class="info-panel-title" id="info-title"></div>
         <div class="info-panel-body" id="info-body"></div>
       </div>
@@ -123,10 +257,14 @@
 
     <footer class="hero-footer">
       <div class="hero-footer-inner">
-        <div class="hero-role">Night • Resume</div>
+        <div class="hero-role">
+          <span>Night • Resume</span>
+        </div>
         <div class="hero-name">ARTEM NAZARCHUK</div>
       </div>
     </footer>
   </div>
+
+  <script src="main.js"></script>
 </body>
 </html>
