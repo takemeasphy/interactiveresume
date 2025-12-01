@@ -1,89 +1,80 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const body = document.body;
+function createStars(containerId, count, maxTopPercent) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
 
-  let currentLang = body.classList.contains('lang-en') ? 'en' : 'uk';
+  const frag = document.createDocumentFragment();
 
-  function createStars(containerId, count, maxTopPercent) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
+  for (let i = 0; i < count; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
 
-    const frag = document.createDocumentFragment();
+    const size = 1 + Math.random() * 1.4;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
 
-    for (let i = 0; i < count; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
+    const left = Math.random() * 100;
+    const top = Math.random() * maxTopPercent;
 
-      const size = 1 + Math.random() * 1.4;
-      star.style.width = size + 'px';
-      star.style.height = size + 'px';
+    star.style.left = left + '%';
+    star.style.top = top + '%';
 
-      const left = Math.random() * 100;
-      const top = Math.random() * maxTopPercent;
+    star.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
 
-      star.style.left = left + '%';
-      star.style.top = top + '%';
+    const duration = 2 + Math.random() * 4;
+    const delay = Math.random() * 6;
 
-      star.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
+    star.style.animationDuration = duration.toFixed(2) + 's';
+    star.style.animationDelay = delay.toFixed(2) + 's';
 
-      const duration = 2 + Math.random() * 4;
-      const delay = Math.random() * 6;
-
-      star.style.animationDuration = duration.toFixed(2) + 's';
-      star.style.animationDelay = delay.toFixed(2) + 's';
-
-      frag.appendChild(star);
-    }
-
-    container.appendChild(frag);
+    frag.appendChild(star);
   }
 
+  container.appendChild(frag);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
   createStars('stars-layer-1', 70, 42);
   createStars('stars-layer-2', 40, 55);
 
-  const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+  setupLanguageSwitch();
+  setupInfoPanels();
+});
 
-  if (!isCoarsePointer) {
-    const cursor = document.createElement('div');
-    cursor.className = 'cursor-dot';
-    document.body.appendChild(cursor);
+function setupLanguageSwitch() {
+  const buttons = Array.from(document.querySelectorAll('.lang-btn'));
+  let currentLang = document.body.classList.contains('lang-en') ? 'en' : 'uk';
 
-    let targetX = window.innerWidth / 2;
-    let targetY = window.innerHeight / 2;
-    let currentX = targetX;
-    let currentY = targetY;
-    let active = false;
+  function applyLang(lang) {
+    currentLang = lang;
 
-    window.addEventListener('mousemove', (e) => {
-      targetX = e.clientX;
-      targetY = e.clientY;
-      active = true;
-      cursor.style.opacity = '1';
+    document.body.classList.toggle('lang-uk', lang === 'uk');
+    document.body.classList.toggle('lang-en', lang === 'en');
+    document.documentElement.lang = lang === 'uk' ? 'uk' : 'en';
+
+    buttons.forEach(btn => {
+      const isActive = btn.dataset.lang === lang;
+      btn.classList.toggle('lang-btn--active', isActive);
+      btn.setAttribute('aria-pressed', String(isActive));
     });
 
-    window.addEventListener('mouseleave', () => {
-      active = false;
-    });
-
-    function animateCursor() {
-      const speed = 0.35;
-      currentX += (targetX - currentX) * speed;
-      currentY += (targetY - currentY) * speed;
-
-      const size = 14;
-      cursor.style.transform = `translate(${currentX - size / 2}px, ${currentY - size / 2}px)`;
-
-      if (!active) {
-        const currentOpacity = parseFloat(cursor.style.opacity || '0');
-        const next = Math.max(currentOpacity - 0.02, 0);
-        cursor.style.opacity = String(next);
-      }
-
-      requestAnimationFrame(animateCursor);
+    const openPlanet = document.querySelector('.planet.planet--info-open');
+    if (openPlanet) {
+      openInfoForPlanet(openPlanet, lang);
     }
-
-    requestAnimationFrame(animateCursor);
   }
 
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lang = btn.dataset.lang;
+      if (!lang || lang === currentLang) return;
+      applyLang(lang);
+    });
+  });
+
+  applyLang(currentLang);
+}
+
+function setupInfoPanels() {
   const sky = document.querySelector('.sky');
   const infoPanel = document.getElementById('info-panel');
   const infoTitle = document.getElementById('info-title');
@@ -91,12 +82,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const infoClose = document.getElementById('info-close');
   const planets = Array.from(document.querySelectorAll('.planet'));
 
-  function openInfoForPlanet(planet) {
-    const langKey = currentLang === 'uk' ? 'titleUk' : 'titleEn';
-    const title = planet.dataset[langKey] || '';
+  if (!sky || !infoPanel || !infoTitle || !infoBody) return;
+
+  function getCurrentLang() {
+    return document.body.classList.contains('lang-en') ? 'en' : 'uk';
+  }
+
+  window.openInfoForPlanet = function (planet, forcedLang) {
+    const lang = forcedLang || getCurrentLang();
+
+    const title =
+      lang === 'uk'
+        ? planet.dataset.titleUk || ''
+        : planet.dataset.titleEn || '';
 
     const contentNode = planet.querySelector(
-      `.planet-info-content[data-lang="${currentLang}"]`
+      `.planet-info-content[data-lang="${lang}"]`
     );
     const bodyHtml = contentNode ? contentNode.innerHTML : '';
 
@@ -106,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const planetRect = planet.getBoundingClientRect();
     const skyRect = sky.getBoundingClientRect();
 
-    const approxWidth = 340;
+    const approxWidth = Math.min(340, skyRect.width - 32);
     let left = planetRect.left - skyRect.left + planetRect.width + 24;
     let top = planetRect.top - skyRect.top + planetRect.height / 2;
 
@@ -115,33 +116,33 @@ document.addEventListener('DOMContentLoaded', () => {
       if (left < 16) left = 16;
     }
 
-    infoPanel.style.left = `${left}px`;
-    infoPanel.style.top = `${top}px`;
+    infoPanel.style.left = left + 'px';
+    infoPanel.style.top = top + 'px';
 
-    planets.forEach((p) => p.classList.remove('planet--info-open'));
+    planets.forEach(p => p.classList.remove('planet--info-open'));
     planet.classList.add('planet--info-open');
 
     infoPanel.classList.add('info-panel--visible');
-  }
+  };
 
   function closeInfoPanel() {
     infoPanel.classList.remove('info-panel--visible');
-    planets.forEach((p) => p.classList.remove('planet--info-open'));
+    planets.forEach(p => p.classList.remove('planet--info-open'));
   }
 
-  planets.forEach((planet) => {
-    planet.addEventListener('click', (e) => {
+  planets.forEach(planet => {
+    planet.addEventListener('click', e => {
       e.stopPropagation();
       openInfoForPlanet(planet);
     });
   });
 
-  infoClose.addEventListener('click', (e) => {
+  infoClose.addEventListener('click', e => {
     e.stopPropagation();
     closeInfoPanel();
   });
 
-  sky.addEventListener('click', (e) => {
+  sky.addEventListener('click', e => {
     if (!e.target.closest('.planet') && !infoPanel.contains(e.target)) {
       closeInfoPanel();
     }
@@ -149,40 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('resize', () => {
     if (!infoPanel.classList.contains('info-panel--visible')) return;
-    const openPlanet = planets.find((p) => p.classList.contains('planet--info-open'));
+    const openPlanet = planets.find(p => p.classList.contains('planet--info-open'));
     if (openPlanet) {
       openInfoForPlanet(openPlanet);
     }
   });
-
-  const langButtons = document.querySelectorAll('.lang-btn');
-
-  function setLanguage(lang) {
-    if (lang !== 'uk' && lang !== 'en') return;
-
-    currentLang = lang;
-    body.classList.remove('lang-uk', 'lang-en');
-    body.classList.add(`lang-${lang}`);
-
-    langButtons.forEach((btn) => {
-      btn.classList.toggle('lang-btn--active', btn.dataset.lang === lang);
-    });
-
-    const openPlanet = planets.find((p) => p.classList.contains('planet--info-open'));
-    if (openPlanet && infoPanel.classList.contains('info-panel--visible')) {
-      openInfoForPlanet(openPlanet);
-    }
-  }
-
-  langButtons.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const lang = btn.dataset.lang;
-      if (lang && lang !== currentLang) {
-        setLanguage(lang);
-      }
-    });
-  });
-
-  setLanguage(currentLang);
-});
+}
