@@ -1,191 +1,160 @@
 function createStars(containerId, count, maxTopPercent) {
   const container = document.getElementById(containerId);
-  if (!container) return;
-
-  const fragment = document.createDocumentFragment();
+  const frag = document.createDocumentFragment();
 
   for (let i = 0; i < count; i++) {
-    const star = document.createElement("div");
-    star.className = "star";
+    const star = document.createElement('div');
+    star.className = 'star';
 
     const size = 1 + Math.random() * 1.4;
-    star.style.width = size + "px";
-    star.style.height = size + "px";
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
 
     const left = Math.random() * 100;
     const top = Math.random() * maxTopPercent;
 
-    star.style.left = left + "%";
-    star.style.top = top + "%";
+    star.style.left = left + '%';
+    star.style.top = top + '%';
 
-    const opacity = 0.3 + Math.random() * 0.7;
-    star.style.opacity = opacity.toString();
+    star.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
 
-    const duration = 4 + Math.random() * 6;
-    const delay = Math.random() * 4;
-    star.style.animationDuration = duration + "s";
-    star.style.animationDelay = delay + "s";
+    const duration = 2 + Math.random() * 4;
+    const delay = Math.random() * 6;
 
-    fragment.appendChild(star);
+    star.style.animationDuration = duration.toFixed(2) + 's';
+    star.style.animationDelay = delay.toFixed(2) + 's';
+
+    frag.appendChild(star);
   }
 
-  container.appendChild(fragment);
+  container.appendChild(frag);
 }
 
-function initCursorTrail() {
-  const DOT_COUNT = 6; 
-  const dots = [];
-  const positions = [];
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-  let mouseActive = false;
+createStars('stars-layer-1', 70, 42);
+createStars('stars-layer-2', 40, 55);
 
-  for (let i = 0; i < DOT_COUNT; i++) {
-    const dot = document.createElement("div");
-    dot.className = "cursor-dot";
-    document.body.appendChild(dot);
+const trailLength = 18;
+const DOT_SIZE = 16;
+const dots = [];
+const positionsCursor = [];
 
-    dots.push(dot);
-    positions.push({ x: mouseX, y: mouseY });
-  }
-
-  function handleMove(event) {
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-    mouseActive = true;
-  }
-
-  function handleLeave() {
-    mouseActive = false;
-  }
-
-  window.addEventListener("mousemove", handleMove);
-  window.addEventListener("mouseleave", handleLeave);
-
-  function animate() {
-    positions[0].x += (mouseX - positions[0].x) * 0.35;
-    positions[0].y += (mouseY - positions[0].y) * 0.35;
-
-    for (let i = 1; i < DOT_COUNT; i++) {
-      positions[i].x += (positions[i - 1].x - positions[i].x) * 0.4;
-      positions[i].y += (positions[i - 1].y - positions[i].y) * 0.4;
-    }
-
-    for (let i = 0; i < DOT_COUNT; i++) {
-      const dot = dots[i];
-      const pos = positions[i];
-
-      const t = 1 - i / DOT_COUNT; 
-      const scale = 0.6 + t * 0.6; 
-      const opacity = mouseActive ? 0.2 + t * 0.6 : 0;
-
-      dot.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) scale(${scale})`;
-      dot.style.opacity = opacity.toString();
-    }
-
-    requestAnimationFrame(animate);
-  }
-
-  requestAnimationFrame(animate);
+for (let i = 0; i < trailLength; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'cursor-dot';
+  document.body.appendChild(dot);
+  dots.push(dot);
+  positionsCursor.push({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
 }
 
-function initPlanets() {
-  const sky = document.querySelector(".sky");
-  const infoPanel = document.getElementById("info-panel");
-  const infoTitle = document.getElementById("info-title");
-  const infoBody = document.getElementById("info-body");
-  const infoClose = document.getElementById("info-close");
-  const planets = Array.from(document.querySelectorAll(".planet"));
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let mouseActive = false;
 
-  if (!sky || !infoPanel || !infoTitle || !infoBody || !infoClose) return;
+window.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  mouseActive = true;
+});
 
-  let openPlanet = null;
+window.addEventListener('mouseleave', () => {
+  mouseActive = false;
+  dots.forEach(dot => dot.style.opacity = '0');
+});
 
-  function positionInfoPanel(planet) {
-    const planetRect = planet.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+function animateTrail() {
+  positionsCursor[0].x = mouseX;
+  positionsCursor[0].y = mouseY;
 
-    const placeRight = planetRect.left < viewportWidth / 2;
-
-    const panelWidth = infoPanel.offsetWidth || 320;
-    const horizontalMargin = 24;
-
-    let left = placeRight
-      ? planetRect.right + horizontalMargin
-      : planetRect.left - panelWidth - horizontalMargin;
-    left = Math.max(16, Math.min(left, viewportWidth - panelWidth - 16));
-
-    const centerY = planetRect.top + planetRect.height / 2;
-    let top = centerY;
-
-    const minTop = 24;
-    const maxTop = viewportHeight - 24;
-    top = Math.max(minTop, Math.min(top, maxTop));
-
-    infoPanel.style.left = left + "px";
-    infoPanel.style.top = top + "px";
+  for (let i = 1; i < trailLength; i++) {
+    const prev = positionsCursor[i - 1];
+    const curr = positionsCursor[i];
+    const lerpFactor = 0.2;
+    curr.x += (prev.x - curr.x) * lerpFactor;
+    curr.y += (prev.y - curr.y) * lerpFactor;
   }
 
-  function openInfoForPlanet(planet) {
-    const title = planet.dataset.title || "";
-    const contentNode = planet.querySelector(".planet-info-content");
-    const bodyHtml = contentNode ? contentNode.innerHTML : "";
+  for (let i = 0; i < trailLength; i++) {
+    const dot = dots[i];
+    const pos = positionsCursor[i];
 
-    infoTitle.textContent = title;
-    infoBody.innerHTML = bodyHtml;
+    const scale = 1 - i * 0.035;
+    const opacity = mouseActive ? (1 - i * 0.055) : 0;
+    const half = DOT_SIZE / 2;
 
-    infoPanel.classList.add("info-panel--visible");
-    planets.forEach((p) => p.classList.remove("planet--info-open"));
-    planet.classList.add("planet--info-open");
-    openPlanet = planet;
-
-    requestAnimationFrame(() => {
-      positionInfoPanel(planet);
-    });
+    dot.style.left = (pos.x - half) + 'px';
+    dot.style.top = (pos.y - half) + 'px';
+    dot.style.transform = `scale(${scale})`;
+    dot.style.opacity = opacity.toFixed(2);
   }
 
-  function closeInfoPanel() {
-    infoPanel.classList.remove("info-panel--visible");
-    planets.forEach((p) => p.classList.remove("planet--info-open"));
-    openPlanet = null;
+  requestAnimationFrame(animateTrail);
+}
+
+requestAnimationFrame(animateTrail);
+
+const sky = document.querySelector('.sky');
+const infoPanel = document.getElementById('info-panel');
+const infoTitle = document.getElementById('info-title');
+const infoBody = document.getElementById('info-body');
+const infoClose = document.getElementById('info-close');
+const planets = Array.from(document.querySelectorAll('.planet'));
+
+function openInfoForPlanet(planet) {
+  const title = planet.dataset.title || '';
+  const contentNode = planet.querySelector('.planet-info-content');
+  const bodyHtml = contentNode ? contentNode.innerHTML : '';
+
+  infoTitle.textContent = title;
+  infoBody.innerHTML = bodyHtml;
+
+  const planetRect = planet.getBoundingClientRect();
+  const skyRect = sky.getBoundingClientRect();
+
+  const approxWidth = 340;
+  let left = planetRect.left - skyRect.left + planetRect.width + 24;
+  let top = planetRect.top - skyRect.top + planetRect.height / 2;
+
+  if (left + approxWidth > skyRect.width - 16) {
+    left = planetRect.left - skyRect.left - approxWidth - 24;
+    if (left < 16) left = 16;
   }
 
-  planets.forEach((planet) => {
-    planet.addEventListener("click", (event) => {
-      event.stopPropagation();
-      if (
-        openPlanet === planet &&
-        infoPanel.classList.contains("info-panel--visible")
-      ) {
-        closeInfoPanel();
-      } else {
-        openInfoForPlanet(planet);
-      }
-    });
+  infoPanel.style.left = left + 'px';
+  infoPanel.style.top = top + 'px';
+
+  planets.forEach(p => p.classList.remove('planet--info-open'));
+  planet.classList.add('planet--info-open');
+
+  infoPanel.classList.add('info-panel--visible');
+}
+
+function closeInfoPanel() {
+  infoPanel.classList.remove('info-panel--visible');
+  planets.forEach(p => p.classList.remove('planet--info-open'));
+}
+
+planets.forEach(planet => {
+  planet.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openInfoForPlanet(planet);
   });
+});
 
-  infoClose.addEventListener("click", (event) => {
-    event.stopPropagation();
+infoClose.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeInfoPanel();
+});
+
+sky.addEventListener('click', (e) => {
+  if (!e.target.closest('.planet') && !infoPanel.contains(e.target)) {
     closeInfoPanel();
-  });
+  }
+});
 
-  sky.addEventListener("click", (event) => {
-    if (!infoPanel.contains(event.target)) {
-      closeInfoPanel();
-    }
-  });
-
-  window.addEventListener("resize", () => {
-    if (openPlanet && infoPanel.classList.contains("info-panel--visible")) {
-      positionInfoPanel(openPlanet);
-    }
-  });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  createStars("stars-layer-1", 70, 42);
-  createStars("stars-layer-2", 40, 55);
-  initCursorTrail();
-  initPlanets();
+window.addEventListener('resize', () => {
+  if (!infoPanel.classList.contains('info-panel--visible')) return;
+  const openPlanet = planets.find(p => p.classList.contains('planet--info-open'));
+  if (openPlanet) {
+    openInfoForPlanet(openPlanet);
+  }
 });
