@@ -2,157 +2,190 @@ function createStars(containerId, count, maxTopPercent) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const frag = document.createDocumentFragment();
+  const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < count; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
+    const star = document.createElement("div");
+    star.className = "star";
 
     const size = 1 + Math.random() * 1.4;
-    star.style.width = size + 'px';
-    star.style.height = size + 'px';
+    star.style.width = size + "px";
+    star.style.height = size + "px";
 
     const left = Math.random() * 100;
     const top = Math.random() * maxTopPercent;
 
-    star.style.left = left + '%';
-    star.style.top = top + '%';
+    star.style.left = left + "%";
+    star.style.top = top + "%";
 
-    star.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
+    const opacity = 0.3 + Math.random() * 0.7;
+    star.style.opacity = opacity.toString();
 
-    const duration = 2 + Math.random() * 4;
-    const delay = Math.random() * 6;
+    const duration = 4 + Math.random() * 6;
+    const delay = Math.random() * 4;
+    star.style.animationDuration = duration + "s";
+    star.style.animationDelay = delay + "s";
 
-    star.style.animationDuration = duration.toFixed(2) + 's';
-    star.style.animationDelay = delay.toFixed(2) + 's';
-
-    frag.appendChild(star);
+    fragment.appendChild(star);
   }
 
-  container.appendChild(frag);
+  container.appendChild(fragment);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  createStars('stars-layer-1', 70, 42);
-  createStars('stars-layer-2', 40, 55);
+function initCursorTrail() {
+  const DOT_COUNT = 6; 
+  const dots = [];
+  const positions = [];
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let mouseActive = false;
 
-  setupLanguageSwitch();
-  setupInfoPanels();
-});
+  for (let i = 0; i < DOT_COUNT; i++) {
+    const dot = document.createElement("div");
+    dot.className = "cursor-dot";
+    document.body.appendChild(dot);
 
-function setupLanguageSwitch() {
-  const buttons = Array.from(document.querySelectorAll('.lang-btn'));
-  let currentLang = document.body.classList.contains('lang-en') ? 'en' : 'uk';
+    dots.push(dot);
+    positions.push({ x: mouseX, y: mouseY });
+  }
 
-  function applyLang(lang) {
-    currentLang = lang;
+  function handleMove(event) {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+    mouseActive = true;
+  }
 
-    document.body.classList.toggle('lang-uk', lang === 'uk');
-    document.body.classList.toggle('lang-en', lang === 'en');
-    document.documentElement.lang = lang === 'uk' ? 'uk' : 'en';
+  function handleLeave() {
+    mouseActive = false;
+  }
 
-    buttons.forEach(btn => {
-      const isActive = btn.dataset.lang === lang;
-      btn.classList.toggle('lang-btn--active', isActive);
-      btn.setAttribute('aria-pressed', String(isActive));
-    });
+  window.addEventListener("mousemove", handleMove);
+  window.addEventListener("mouseleave", handleLeave);
 
-    const openPlanet = document.querySelector('.planet.planet--info-open');
-    if (openPlanet) {
-      openInfoForPlanet(openPlanet, lang);
+  function animate() {
+    positions[0].x += (mouseX - positions[0].x) * 0.35;
+    positions[0].y += (mouseY - positions[0].y) * 0.35;
+
+    for (let i = 1; i < DOT_COUNT; i++) {
+      positions[i].x += (positions[i - 1].x - positions[i].x) * 0.4;
+      positions[i].y += (positions[i - 1].y - positions[i].y) * 0.4;
     }
+
+    for (let i = 0; i < DOT_COUNT; i++) {
+      const dot = dots[i];
+      const pos = positions[i];
+
+      const t = 1 - i / DOT_COUNT; 
+      const scale = 0.6 + t * 0.6; 
+      const opacity = mouseActive ? 0.2 + t * 0.6 : 0;
+
+      dot.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) scale(${scale})`;
+      dot.style.opacity = opacity.toString();
+    }
+
+    requestAnimationFrame(animate);
   }
 
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const lang = btn.dataset.lang;
-      if (!lang || lang === currentLang) return;
-      applyLang(lang);
-    });
-  });
-
-  applyLang(currentLang);
+  requestAnimationFrame(animate);
 }
 
-function setupInfoPanels() {
-  const sky = document.querySelector('.sky');
-  const infoPanel = document.getElementById('info-panel');
-  const infoTitle = document.getElementById('info-title');
-  const infoBody = document.getElementById('info-body');
-  const infoClose = document.getElementById('info-close');
-  const planets = Array.from(document.querySelectorAll('.planet'));
+function initPlanets() {
+  const sky = document.querySelector(".sky");
+  const infoPanel = document.getElementById("info-panel");
+  const infoTitle = document.getElementById("info-title");
+  const infoBody = document.getElementById("info-body");
+  const infoClose = document.getElementById("info-close");
+  const planets = Array.from(document.querySelectorAll(".planet"));
 
-  if (!sky || !infoPanel || !infoTitle || !infoBody) return;
+  if (!sky || !infoPanel || !infoTitle || !infoBody || !infoClose) return;
 
-  function getCurrentLang() {
-    return document.body.classList.contains('lang-en') ? 'en' : 'uk';
+  let openPlanet = null;
+
+  function positionInfoPanel(planet) {
+    const planetRect = planet.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    const placeRight = planetRect.left < viewportWidth / 2;
+
+    const panelWidth = infoPanel.offsetWidth || 320;
+    const horizontalMargin = 24;
+
+    let left = placeRight
+      ? planetRect.right + horizontalMargin
+      : planetRect.left - panelWidth - horizontalMargin;
+    left = Math.max(16, Math.min(left, viewportWidth - panelWidth - 16));
+
+    const centerY = planetRect.top + planetRect.height / 2;
+    let top = centerY;
+
+    const minTop = 24;
+    const maxTop = viewportHeight - 24;
+    top = Math.max(minTop, Math.min(top, maxTop));
+
+    infoPanel.style.left = left + "px";
+    infoPanel.style.top = top + "px";
   }
 
-  window.openInfoForPlanet = function (planet, forcedLang) {
-    const lang = forcedLang || getCurrentLang();
-
-    const title =
-      lang === 'uk'
-        ? planet.dataset.titleUk || ''
-        : planet.dataset.titleEn || '';
-
-    const contentNode = planet.querySelector(
-      `.planet-info-content[data-lang="${lang}"]`
-    );
-    const bodyHtml = contentNode ? contentNode.innerHTML : '';
+  function openInfoForPlanet(planet) {
+    const title = planet.dataset.title || "";
+    const contentNode = planet.querySelector(".planet-info-content");
+    const bodyHtml = contentNode ? contentNode.innerHTML : "";
 
     infoTitle.textContent = title;
     infoBody.innerHTML = bodyHtml;
 
-    const planetRect = planet.getBoundingClientRect();
-    const skyRect = sky.getBoundingClientRect();
+    infoPanel.classList.add("info-panel--visible");
+    planets.forEach((p) => p.classList.remove("planet--info-open"));
+    planet.classList.add("planet--info-open");
+    openPlanet = planet;
 
-    const approxWidth = Math.min(340, skyRect.width - 32);
-    let left = planetRect.left - skyRect.left + planetRect.width + 24;
-    let top = planetRect.top - skyRect.top + planetRect.height / 2;
-
-    if (left + approxWidth > skyRect.width - 16) {
-      left = planetRect.left - skyRect.left - approxWidth - 24;
-      if (left < 16) left = 16;
-    }
-
-    infoPanel.style.left = left + 'px';
-    infoPanel.style.top = top + 'px';
-
-    planets.forEach(p => p.classList.remove('planet--info-open'));
-    planet.classList.add('planet--info-open');
-
-    infoPanel.classList.add('info-panel--visible');
-  };
-
-  function closeInfoPanel() {
-    infoPanel.classList.remove('info-panel--visible');
-    planets.forEach(p => p.classList.remove('planet--info-open'));
+    requestAnimationFrame(() => {
+      positionInfoPanel(planet);
+    });
   }
 
-  planets.forEach(planet => {
-    planet.addEventListener('click', e => {
-      e.stopPropagation();
-      openInfoForPlanet(planet);
+  function closeInfoPanel() {
+    infoPanel.classList.remove("info-panel--visible");
+    planets.forEach((p) => p.classList.remove("planet--info-open"));
+    openPlanet = null;
+  }
+
+  planets.forEach((planet) => {
+    planet.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (
+        openPlanet === planet &&
+        infoPanel.classList.contains("info-panel--visible")
+      ) {
+        closeInfoPanel();
+      } else {
+        openInfoForPlanet(planet);
+      }
     });
   });
 
-  infoClose.addEventListener('click', e => {
-    e.stopPropagation();
+  infoClose.addEventListener("click", (event) => {
+    event.stopPropagation();
     closeInfoPanel();
   });
 
-  sky.addEventListener('click', e => {
-    if (!e.target.closest('.planet') && !infoPanel.contains(e.target)) {
+  sky.addEventListener("click", (event) => {
+    if (!infoPanel.contains(event.target)) {
       closeInfoPanel();
     }
   });
 
-  window.addEventListener('resize', () => {
-    if (!infoPanel.classList.contains('info-panel--visible')) return;
-    const openPlanet = planets.find(p => p.classList.contains('planet--info-open'));
-    if (openPlanet) {
-      openInfoForPlanet(openPlanet);
+  window.addEventListener("resize", () => {
+    if (openPlanet && infoPanel.classList.contains("info-panel--visible")) {
+      positionInfoPanel(openPlanet);
     }
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  createStars("stars-layer-1", 70, 42);
+  createStars("stars-layer-2", 40, 55);
+  initCursorTrail();
+  initPlanets();
+});
