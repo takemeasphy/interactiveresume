@@ -467,10 +467,23 @@ body {
   }
 }
 
-@media (max-width: 768px) {
+
+@media (pointer: coarse) {
   .info-panel {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.94);
+    max-width: min(90vw, 360px);
+    width: 90vw;
     max-height: 80vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    z-index: 50; 
+  }
+
+  .info-panel--visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
 }
