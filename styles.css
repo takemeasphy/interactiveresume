@@ -447,6 +447,24 @@ body {
   filter: blur(4px);
 }
 
+@media (max-width: 768px) {
+  .info-panel {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.94);
+    max-width: min(90vw, 360px);
+    max-height: 80vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .info-panel--visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
 @media (pointer: coarse) {
   body {
     cursor: auto;
