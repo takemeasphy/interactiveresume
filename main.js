@@ -110,23 +110,46 @@ function openInfoForPlanet(planet) {
   const planetRect = planet.getBoundingClientRect();
   const skyRect = sky.getBoundingClientRect();
 
-  const approxWidth = 340;
-  let left = planetRect.left - skyRect.left + planetRect.width + 24;
-  let top = planetRect.top - skyRect.top + planetRect.height / 2;
+  const isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
-  if (left + approxWidth > skyRect.width - 16) {
-    left = planetRect.left - skyRect.left - approxWidth - 24;
-    if (left < 16) left = 16;
+  if (isTouch) {
+    infoPanel.style.position = 'fixed';
+    infoPanel.style.left = '50%';
+    infoPanel.style.top = '50%';
+    infoPanel.style.transform = 'translate(-50%, -50%)';
+    infoPanel.style.maxWidth = 'min(90vw, 360px)';
+    infoPanel.style.width = '90vw';
+    infoPanel.style.maxHeight = '80vh';
+    infoPanel.style.overflowY = 'auto';
+    infoPanel.style.webkitOverflowScrolling = 'touch';
+  } else {
+    const approxWidth = 340;
+    let left = planetRect.left - skyRect.left + planetRect.width + 24;
+    let top = planetRect.top - skyRect.top + planetRect.height / 2;
+
+    if (left + approxWidth > skyRect.width - 16) {
+      left = planetRect.left - skyRect.left - approxWidth - 24;
+      if (left < 16) left = 16;
+    }
+
+    infoPanel.style.position = 'absolute';
+    infoPanel.style.left = left + 'px';
+    infoPanel.style.top = top + 'px';
+
+    infoPanel.style.transform = '';
+    infoPanel.style.maxWidth = '';
+    infoPanel.style.width = '';
+    infoPanel.style.maxHeight = '';
+    infoPanel.style.overflowY = '';
+    infoPanel.style.webkitOverflowScrolling = '';
   }
-
-  infoPanel.style.left = left + 'px';
-  infoPanel.style.top = top + 'px';
 
   planets.forEach(p => p.classList.remove('planet--info-open'));
   planet.classList.add('planet--info-open');
 
   infoPanel.classList.add('info-panel--visible');
 }
+
 
 function closeInfoPanel() {
   infoPanel.classList.remove('info-panel--visible');
