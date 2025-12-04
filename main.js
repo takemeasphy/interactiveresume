@@ -139,9 +139,6 @@ function openInfoForPlanet(planet) {
     infoPanel.style.transform = '';
     infoPanel.style.maxWidth = '';
     infoPanel.style.width = '';
-    infoPanel.style.maxHeight = '';
-    infoPanel.style.overflowY = '';
-    infoPanel.style.webkitOverflowScrolling = '';
   }
 
   planets.forEach(p => p.classList.remove('planet--info-open'));

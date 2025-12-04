@@ -367,6 +367,9 @@ body {
   transition: opacity 0.25s ease, transform 0.25s ease;
   z-index: 30;
   backdrop-filter: blur(16px);
+  max-height: 80vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .info-panel--visible {
