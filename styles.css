@@ -457,39 +457,6 @@ body {
   }
 }
 
-@media (max-width: 768px) {
-  .planet-main {
-    top: 46%;
-    width: min(40vw, 360px);
-  }
-
-  .planet-blue {
-    left: 6%;
-    top: 24%;
-  }
-
-  .planet-pink {
-    right: 6%;
-    top: 22%;
-  }
-
-  .planet-purple {
-    right: 10%;
-    bottom: 14%;
-  }
-}
-
-@media (max-width: 480px) {
-  .planet-main {
-    top: 48%;
-    width: min(60vw, 320px);
-  }
-
-  .hero-footer {
-    padding-inline: 10px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
 
   *,

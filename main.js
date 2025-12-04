@@ -33,7 +33,7 @@ function createStars(containerId, count, maxTopPercent) {
 createStars('stars-layer-1', 70, 42);
 createStars('stars-layer-2', 40, 55);
 
-const trailLength = 18;
+const trailLength = 1;
 const DOT_SIZE = 16;
 const dots = [];
 const positionsCursor = [];
